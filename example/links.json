@@ -1,0 +1,38 @@
+{
+  "generatedAt": "2026-10-06T12:00:00.000Z",
+  "account": "owner@brand.example",
+  "links": [
+    {
+      "url": "https://qr.brand.example/menu",
+      "hostname": "qr.brand.example",
+      "slug": "menu",
+      "destination": "https://brand.example/menu",
+      "title": "Table menu",
+      "shared": false
+    },
+    {
+      "url": "https://qr.brand.example/wifi-help",
+      "hostname": "qr.brand.example",
+      "slug": "wifi-help",
+      "destination": "https://brand.example/help/wifi",
+      "title": "Wi-Fi help sign",
+      "shared": false
+    },
+    {
+      "url": "https://qr.brand.example/k7m2p9x",
+      "hostname": "qr.brand.example",
+      "slug": "k7m2p9x",
+      "destination": "https://brand.example/offers/autumn?src=flyer",
+      "title": "Autumn flyer",
+      "shared": false
+    },
+    {
+      "url": "https://gtdqr.com/abc2345",
+      "hostname": "gtdqr.com",
+      "slug": "abc2345",
+      "destination": "https://brand.example/reviews",
+      "title": "Review card",
+      "shared": true
+    }
+  ]
+}

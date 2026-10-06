@@ -1,0 +1,5 @@
+short_url,hostname,path,destination,title,portable
+https://qr.brand.example/menu,qr.brand.example,menu,https://brand.example/menu,Table menu,yes
+https://qr.brand.example/wifi-help,qr.brand.example,wifi-help,https://brand.example/help/wifi,Wi-Fi help sign,yes
+https://qr.brand.example/k7m2p9x,qr.brand.example,k7m2p9x,https://brand.example/offers/autumn?src=flyer,Autumn flyer,yes
+https://gtdqr.com/abc2345,gtdqr.com,abc2345,https://brand.example/reviews,Review card,no

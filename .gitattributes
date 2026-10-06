@@ -1,0 +1,3 @@
+* text=auto eol=lf
+# CSV keeps CRLF line endings (RFC 4180), exactly as the generator writes them.
+*.csv -text

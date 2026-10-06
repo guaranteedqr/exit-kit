@@ -1,0 +1,25 @@
+{
+  "name": "guaranteedqr-exit-kit",
+  "version": "1.0.0",
+  "description": "The generator of the Guaranteed QR exit kit: a ready-to-host copy of a customer's QR code redirects.",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "repository": "github:guaranteedqr/exit-kit",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "check": "tsc --noEmit",
+    "example": "node scripts/example.ts"
+  },
+  "dependencies": {
+    "fflate": "0.8.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.4",
+    "typescript": "5.9.3",
+    "vitest": "5.0.2"
+  }
+}
