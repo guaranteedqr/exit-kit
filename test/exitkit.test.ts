@@ -6,12 +6,12 @@ import { unzipSync, strFromU8 } from 'fflate';
 import { describe, expect, it } from 'vitest';
 import { buildExitKitFiles, buildExitKitZip, linksCsv, redirectPage, type ExitLink } from '../src/index';
 
-const META = { brandName: 'Evercode', accountEmail: 'owner@example.com', generatedAt: new Date('2026-09-27T12:00:00Z'), exitKitRepo: 'https://github.com/x/y' };
+const META = { brandName: 'Guaranteed QR', accountEmail: 'owner@example.com', generatedAt: new Date('2026-09-27T12:00:00Z'), exitKitRepo: 'https://github.com/guaranteedqr/exit-kit', sharedYearsAfterClosing: 5 };
 
 const LINKS: ExitLink[] = [
   { hostname: 'qr.brand.example', slug: 'menu', destination: 'https://brand.example/menu?table=4&lang=en', title: 'Menu', shared: false },
   { hostname: 'qr.brand.example', slug: 'k7m2p9x', destination: 'https://brand.example/a"b<c>', title: '=HYPERLINK("evil")', shared: false },
-  { hostname: 'go.evercode.example', slug: 'abc2345', destination: 'https://elsewhere.example/', title: 'Shared', shared: true },
+  { hostname: 'gtdqr.com', slug: 'abc2345', destination: 'https://elsewhere.example/', title: 'Shared', shared: true },
 ];
 
 describe('exit kit', () => {
@@ -30,8 +30,23 @@ describe('exit kit', () => {
         'sites/qr.brand.example/worker.js',
       ]),
     );
-    expect(Object.keys(files).some((f) => f.includes('go.evercode.example'))).toBe(false);
-    expect(files['README.md']).toContain('1 of your codes use our shared domain');
+    expect(Object.keys(files).some((f) => f.includes('gtdqr.com'))).toBe(false);
+    expect(files['README.md']).toContain('Your codes on our shared domain (1 in all) cannot be moved');
+  });
+
+  it('tells the truth about what the kit needs and keeps, and how to change it later', () => {
+    const readme = files['README.md']!;
+    expect(readme).toContain('This kit keeps your printed QR codes on your own domain working');
+    expect(readme).toContain('a free account at a web host such as Netlify or Cloudflare is enough');
+    expect(readme).not.toContain('an account or any programming');
+    // Cloudflare's direct upload as its dashboard names it in 2026.
+    expect(readme).toContain('**Workers & Pages → Create application → Get started → Drag and drop your files**');
+    expect(readme).toContain('its entry in `404.html`');
+    expect(readme).toContain('edit its line in `worker.js` and run `npx wrangler deploy` again');
+    expect(readme).toContain('for at least 5 years');
+    // A kit without a domain of its own lists no site folder.
+    const sharedOnly = buildExitKitFiles(LINKS.filter((l) => l.shared), META)['README.md']!;
+    expect(sharedOnly).not.toContain('sites/<your hostname>/');
   });
 
   it('writes Netlify / Cloudflare Pages redirect rules', () => {

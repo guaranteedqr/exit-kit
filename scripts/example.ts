@@ -18,6 +18,7 @@ const files = buildExitKitFiles(links, {
   accountEmail: 'owner@brand.example',
   generatedAt: new Date('2026-10-06T12:00:00Z'),
   exitKitRepo: 'https://github.com/guaranteedqr/exit-kit',
+  sharedYearsAfterClosing: 5,
 });
 
 rmSync(out, { recursive: true, force: true });

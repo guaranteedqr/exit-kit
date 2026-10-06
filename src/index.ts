@@ -19,6 +19,8 @@ export interface ExitKitMeta {
   accountEmail: string;
   generatedAt: Date;
   exitKitRepo: string;
+  /** How long codes on the shared domain keep forwarding after a closing, as the Terms promise. */
+  sharedYearsAfterClosing: number;
 }
 
 const escapeHtml = (s: string) =>
@@ -105,13 +107,13 @@ function readme(links: ExitLink[], meta: ExitKitMeta, hostnames: string[]): stri
     '',
     `Generated ${date} for ${meta.accountEmail}.`,
     '',
-    `This kit keeps your printed QR codes working if ${meta.brandName} ever shuts down, or if you want to leave.`,
-    'You do not need us, an account or any programming to use it.',
+    `This kit keeps your printed QR codes on your own domain working if ${meta.brandName} ever shuts down, or if you want to leave.`,
+    'You do not need us or any programming to use it: a free account at a web host such as Netlify or Cloudflare is enough.',
     '',
     '## What is inside',
     '',
     '- `links.csv` and `links.json`: every code, its address and where it points.',
-    '- `sites/<your hostname>/`: a ready-to-host copy of the redirects for each of your own domains.',
+    ...(hostnames.length ? ['- `sites/<your hostname>/`: a ready-to-host copy of the redirects for each of your own domains.'] : []),
     '',
   ];
   if (hostnames.length) {
@@ -131,8 +133,8 @@ function readme(links: ExitLink[], meta: ExitKitMeta, hostnames: string[]): stri
       '',
       '### Option B: Cloudflare Pages',
       '',
-      '1. In the Cloudflare dashboard open **Workers & Pages → Create → Pages → Upload assets**.',
-      '2. Upload the folder `sites/<your hostname>`.',
+      '1. In the Cloudflare dashboard open **Workers & Pages → Create application → Get started → Drag and drop your files**.',
+      '2. Name the project, drag in the folder `sites/<your hostname>` and select **Deploy site**.',
       '3. Under **Custom domains**, add your hostname and follow the DNS instructions.',
       '',
       '### Option C: any static host (GitHub Pages, Amazon S3, your own server)',
@@ -146,7 +148,8 @@ function readme(links: ExitLink[], meta: ExitKitMeta, hostnames: string[]): stri
       '',
       '### Changing a destination later',
       '',
-      'Edit the line for that code in `_redirects`, and the matching `<path>/index.html`, then upload the folder again.',
+      'Edit the line for that code in `_redirects`, the matching `<path>/index.html` and its entry in `404.html`, then upload',
+      'the folder again. With the Worker (option D), edit its line in `worker.js` and run `npx wrangler deploy` again.',
       '',
     );
   } else {
@@ -162,10 +165,10 @@ function readme(links: ExitLink[], meta: ExitKitMeta, hostnames: string[]): stri
     lines.push(
       `## Codes on the shared ${meta.brandName} domain`,
       '',
-      `${shared.length} of your codes use our shared domain. They cannot be moved, because the domain is ours. If`,
-      `${meta.brandName} closes, they keep forwarding to their last destination for the period our Terms of Service`,
-      'promise, but nobody can change them after the closing date. Their destinations are in `links.csv`; recreate',
-      'them on your own domain before you reprint.',
+      `Your codes on our shared domain (${shared.length} in all) cannot be moved, because the domain is ours. If`,
+      `${meta.brandName} closes, they keep forwarding to their last destination for at least ${meta.sharedYearsAfterClosing} years, as our`,
+      'Terms of Service promise, but nobody can change them after the closing date. Their destinations are in',
+      '`links.csv`; recreate them on your own domain before you reprint.',
       '',
     );
   }
