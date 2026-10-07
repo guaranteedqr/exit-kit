@@ -9,9 +9,9 @@ import { buildExitKitFiles, buildExitKitZip, linksCsv, redirectPage, type ExitLi
 const META = { brandName: 'Guaranteed QR', accountEmail: 'owner@example.com', generatedAt: new Date('2026-09-27T12:00:00Z'), exitKitRepo: 'https://github.com/guaranteedqr/exit-kit', sharedYearsAfterClosing: 5 };
 
 const LINKS: ExitLink[] = [
-  { hostname: 'qr.brand.example', slug: 'menu', destination: 'https://brand.example/menu?table=4&lang=en', title: 'Menu', shared: false },
-  { hostname: 'qr.brand.example', slug: 'k7m2p9x', destination: 'https://brand.example/a"b<c>', title: '=HYPERLINK("evil")', shared: false },
-  { hostname: 'gtdqr.com', slug: 'abc2345', destination: 'https://elsewhere.example/', title: 'Shared', shared: true },
+  { hostname: 'qr.brand.example', slug: 'menu', destination: 'https://brand.example/menu?table=4&lang=en', title: 'Menu', status: 'active', shared: false },
+  { hostname: 'qr.brand.example', slug: 'k7m2p9x', destination: 'https://brand.example/a"b<c>', title: '=HYPERLINK("evil")', status: 'active', shared: false },
+  { hostname: 'gtdqr.com', slug: 'abc2345', destination: 'https://elsewhere.example/', title: 'Shared', status: 'active', shared: true },
 ];
 
 describe('exit kit', () => {
@@ -63,7 +63,7 @@ describe('exit kit', () => {
   it('neutralizes spreadsheet formulas in the CSV', () => {
     const csv = linksCsv(LINKS);
     expect(csv).toContain(`"'=HYPERLINK(""evil"")"`);
-    expect(csv.split('\r\n')[0]).toBe('short_url,hostname,path,destination,title,portable');
+    expect(csv.split('\r\n')[0]).toBe('short_url,hostname,path,destination,title,status,portable');
   });
 
   it('zips every file', () => {

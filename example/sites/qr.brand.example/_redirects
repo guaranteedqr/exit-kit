@@ -1,5 +1,4 @@
 # Redirects for qr.brand.example, exported from Guaranteed QR on 2026-10-06.
 # Format: /path  destination  status. Works on Netlify and Cloudflare Pages.
-/menu  https://brand.example/menu  302
-/wifi-help  https://brand.example/help/wifi  302
-/k7m2p9x  https://brand.example/offers/autumn?src=flyer  302
+# 3 paused or blocked codes are listed in links.csv and left out here.
+

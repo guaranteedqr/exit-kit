@@ -7,7 +7,8 @@ You do not need us or any programming to use it: a free account at a web host su
 
 ## What is inside
 
-- `links.csv` and `links.json`: every code, its address and where it points.
+- `links.csv` and `links.json`: every code, its address, where it points and its status.
+- Paused and blocked codes are listed there with their status; the site folders carry only the live ones.
 - `sites/<your hostname>/`: a ready-to-host copy of the redirects for each of your own domains.
 
 ## Codes on your own domain move with you

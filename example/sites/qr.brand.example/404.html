@@ -6,7 +6,7 @@
 <title>Not found</title>
 <script>
   // Fallback for hosts without redirect rules: match the path case-insensitively.
-  var links = {"menu":"https://brand.example/menu","wifi-help":"https://brand.example/help/wifi","k7m2p9x":"https://brand.example/offers/autumn?src=flyer"};
+  var links = {};
   var path = location.pathname.replace(/^\/+|\/+$/g, '').toLowerCase();
   if (links[path]) location.replace(links[path]);
 </script>

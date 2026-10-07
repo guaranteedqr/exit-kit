@@ -12,7 +12,11 @@ export interface ExitLink {
   title: string;
   /** True for codes on our shared short domain; those cannot move to another host. */
   shared: boolean;
+  /** As the service serves it. Only a live code becomes a redirect rule; the rest are listed with their status. */
+  status: 'active' | 'paused' | 'blocked';
 }
+
+const live = (l: ExitLink) => l.status === 'active';
 
 export interface ExitKitMeta {
   brandName: string;
@@ -36,9 +40,9 @@ function csvCell(value: string): string {
 }
 
 export function linksCsv(links: ExitLink[]): string {
-  const rows = [['short_url', 'hostname', 'path', 'destination', 'title', 'portable']];
+  const rows = [['short_url', 'hostname', 'path', 'destination', 'title', 'status', 'portable']];
   for (const l of links) {
-    rows.push([`https://${l.hostname}/${l.slug}`, l.hostname, l.slug, l.destination, l.title, l.shared ? 'no' : 'yes']);
+    rows.push([`https://${l.hostname}/${l.slug}`, l.hostname, l.slug, l.destination, l.title, l.status, l.shared ? 'no' : 'yes']);
   }
   return rows.map((r) => r.map(csvCell).join(',')).join('\r\n') + '\r\n';
 }
@@ -112,7 +116,8 @@ function readme(links: ExitLink[], meta: ExitKitMeta, hostnames: string[]): stri
     '',
     '## What is inside',
     '',
-    '- `links.csv` and `links.json`: every code, its address and where it points.',
+    '- `links.csv` and `links.json`: every code, its address, where it points and its status.',
+    ...(links.some((l) => !live(l)) ? ['- Paused and blocked codes are listed there with their status; the site folders carry only the live ones.'] : []),
     ...(hostnames.length ? ['- `sites/<your hostname>/`: a ready-to-host copy of the redirects for each of your own domains.'] : []),
     '',
   ];
@@ -198,13 +203,16 @@ export function buildExitKitFiles(links: ExitLink[], meta: ExitKitMeta): Record<
     2,
   );
   for (const host of hostnames) {
-    const hostLinks = byHost.get(host)!;
+    // A paused or blocked code is no rule: a kit must not hand out what the service does not serve.
+    const hostLinks = byHost.get(host)!.filter(live);
+    const left = byHost.get(host)!.length - hostLinks.length;
     const map: Record<string, string> = {};
     for (const l of hostLinks) map[l.slug.toLowerCase()] = l.destination;
     const base = `sites/${host}`;
     files[`${base}/_redirects`] =
       `# Redirects for ${host}, exported from ${meta.brandName} on ${meta.generatedAt.toISOString().slice(0, 10)}.\n` +
       `# Format: /path  destination  status. Works on Netlify and Cloudflare Pages.\n` +
+      (left ? `# ${left} paused or blocked code${left === 1 ? ' is' : 's are'} listed in links.csv and left out here.\n` : '') +
       hostLinks.map((l) => `/${l.slug}  ${l.destination}  302`).join('\n') +
       '\n';
     for (const l of hostLinks) files[`${base}/${l.slug}/index.html`] = redirectPage(l.destination);
